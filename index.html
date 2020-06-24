@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+	<meta charset="utf-8">
+	<title>Dijkstra</title>
+    <style>
+       /* Set the size of the div element that contains the map */
+      #map {
+        height: 600px;
+        width: auto;
+       }
+    </style>
+  </head>
+  <body>
+    
+    <div id="map"></div>
+    <div id="msg"></div>
+	
+	<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHoTVOoPXy7mye08We2-KvpzO2oZODwdM&callback=initMap">
+    </script>
+	<script src="map.js"></script>
+  </body>
+</html>
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Dijkstra</title>
+		<script src="dijkstra.js"></script>
+	</head>
+	<body>
+		<script>
+			var map = {a:{b:3,c:1},b:{a:2,c:1},c:{a:4,b:1}};
+			var graph = new Dijkstra(map);
+
+			console.log(graph.findShortestPath('a', 'b'));
+			console.log(graph.findShortestPath('a', 'c'));
+			console.log(graph.findShortestPath('b', 'a'));
+			console.log(graph.findShortestPath('b', 'c', 'b'));
+			console.log(graph.findShortestPath('c', 'a', 'b'));
+			console.log(graph.findShortestPath('c', 'b', 'a'));
+		</script>
+	</body>
+</html> -->
