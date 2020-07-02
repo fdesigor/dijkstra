@@ -3,13 +3,22 @@ var map;
 function initMap() {
   fetch("./dataset.json")
     .then((response) => response.json())
-    .then((json) => console.log(json));
+    .then((json) => {
+      // Funções auxiliares
+      const reducer = (accumulator, currentValue) => accumulator + currentValue;
 
-  // Opções do mapa
-  const center = { lat: 38.0603693, lng: -95.4713246 };
-  const options = { zoom: 5, scaleControl: true, center: center };
+      // Opções do mapa
+      const center = { 
+        lat: json.map(value => value.coord.lat).reduce(reducer)/json.length, 
+        lng: json.map(value => value.coord.lng).reduce(reducer)/json.length
+      };
+      const options = { zoom: 5, scaleControl: true, center: center };
 
-  map = new google.maps.Map(document.getElementById("map"), options);
+      map = new google.maps.Map(document.getElementById("map"), options);
+      
+      // console.log(json)
+
+    });
 
   // Cidades
   const chicago = { lat: 41.85003, lng: -87.65005 };
@@ -132,20 +141,8 @@ function initMap() {
   const carmel_junction = { lat: 37.2227412, lng: -112.6884808 };
   var mk39 = new google.maps.Marker({ position: carmel_junction, map: map });
 
-  const grand_canyon = { lat: 36.05443, lng: -112.13934 };
+  const grand_canyon = { lat: 36.2867297, lng: -113.6959844 };
   var mk40 = new google.maps.Marker({ position: grand_canyon, map: map });
 
   var line = new google.maps.Polyline({ path: [chicago, peoria], map: map });
 }
-
-// function loadJSON(callback) {
-//   var xobj = new XMLHttpRequest();
-//   xobj.overrideMimeType("application/json");
-//   xobj.open("GET", "../dataset.json", true);
-//   xobj.onreadystatechange = function () {
-//     if (xobj.readyState == 4 && xobj.status == "200") {
-//       callback(JSON.parse(xobj.responseText));
-//     }
-//   };
-//   xobj.send(null);
-// }
