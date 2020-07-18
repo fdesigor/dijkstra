@@ -27,8 +27,6 @@ function initMap() {
           matrix[i].push(Infinity)
         }
       }
-
-      
       
       // Arestas
       let edges = []
@@ -49,14 +47,13 @@ function initMap() {
         for (let j = 0; j < json.length; j++) {
           if (matrix[i][j] !== Infinity) {
             mapDijkistra[i+1] = Object.assign(mapDijkistra[i+1], { [j+1] : matrix[i][j] })
-            
           }
         }  
       }
 
-      var graph = new Dijkstra(mapDijkistra);
+	  var graph = new Dijkstra(mapDijkistra);
 
-      console.log(graph.findShortestPath(1, 40));
+    //   console.log(graph.findShortestPath(1, 40));
 
       let shortestPath = graph.findShortestPath(1, 40);
 
@@ -86,7 +83,22 @@ function initMap() {
             }
           }
         }
-      }
+	  }
+	
+	
+	// FLOYD WHARSHAL
+	// matrix2 = [
+	// 	[Infinity, 325, 430, 295, 960, 710, 1340, 280],
+	// 	[325, Infinity, 490, 535, 322, 1022, 1350, 330],
+	// 	[560, 420, Infinity, 554, 605, 590, 891, 215],
+	// 	[270, 535, 570, Infinity, 947, 754, 1288, 250],
+	// 	[940, 325, 652, 1023, Infinity, 584, 396, 1210],
+	// 	[850, 1080, 573, 827, 584, Infinity, 680, 840],
+	// 	[1560, 1350, 960, 1076, 496, 680, Infinity, 1320],
+	// 	[280, 380, 342, 331, 1387, 840, 1209, Infinity]
+	// ]
+	// var shortestDists = floydWarshall(matrix2);
+	// console.log(shortestDists)
       
       // ANIMATED MARKER
       // let mk = new google.maps.Marker({ position: { "lat": 41.85003000, "lng": -87.65005000 }, map: map })
@@ -295,3 +307,151 @@ var Dijkstra = (function (undefined) {
 //         }
 //       }
 //     });
+
+var floydWarshall = (function () {
+
+    /**
+
+     * Matrix used for the algorithm.
+
+     */
+
+    var dist;
+
+    /**
+
+     * Initialize the distance matrix.
+
+     *
+
+     * @private
+
+     * @param {Array} graph Distance matrix of the array.
+
+     * @return {Array} Distance matrix used for the algorithm.
+
+     */
+
+    function init(graph) {
+
+      var dist = [];
+
+      var size = graph.length;
+
+      for (var i = 0; i < size; i += 1) {
+
+        dist[i] = [];
+
+        for (var j = 0; j < size; j += 1) {
+
+          if (i === j) {
+
+            dist[i][j] = 0;
+
+          } else if (!isFinite(graph[i][j])) {
+
+            dist[i][j] = Infinity;
+
+          } else {
+
+            dist[i][j] = graph[i][j];
+
+          }
+
+        }
+
+      }
+
+      return dist;
+
+    }
+
+    /**
+
+     * Floyd-Warshall algorithm. Finds the shortest path between
+
+     * each two vertices.<br><br>
+
+     * Complexity: O(|V|^3) where V is the number of vertices.
+
+     *
+
+     * @public
+
+     * @module graphs/shortest-path/floyd-warshall
+
+     * @param {Array} graph A distance matrix of the graph.
+
+     * @return {Array} Array which contains the shortest
+
+     *    distance between each two vertices.
+
+     *
+
+     * @example
+
+     * var floydWarshall =
+
+     * require('path-to-algorithms/src/graphs/shortest-path/floyd-warshall').floydWarshall;
+
+     * var distMatrix =
+
+     *    [[Infinity, 7,        9,       Infinity,  Infinity, 16],
+
+     *     [7,        Infinity, 10,       15,       Infinity, Infinity],
+
+     *     [9,        10,       Infinity, 11,       Infinity, 2],
+
+     *     [Infinity, 15,       11,       Infinity, 6,        Infinity],
+
+     *     [Infinity, Infinity, Infinity, 6,        Infinity, 9],
+
+     *     [16,       Infinity, 2,        Infinity, 9,        Infinity]];
+
+     *
+
+     * // [ [ 0, 7, 9, 20, 20, 11 ],
+
+     * //   [ 7, 0, 10, 15, 21, 12 ],
+
+     * //   [ 9, 10, 0, 11, 11, 2 ],
+
+     * //   [ 20, 15, 11, 0, 6, 13 ],
+
+     * //   [ 20, 21, 11, 6, 0, 9 ],
+
+     * //   [ 11, 12, 2, 13, 9, 0 ] ]
+
+     * var shortestDists = floydWarshall(distMatrix);
+
+     */
+
+    return function (graph) {
+
+      dist = init(graph);
+
+      var size = graph.length;
+
+      for (var k = 0; k < size; k += 1) {
+
+        for (var i = 0; i < size; i += 1) {
+
+          for (var j = 0; j < size; j += 1) {
+
+            if (dist[i][j] > dist[i][k] + dist[k][j]) {
+
+              dist[i][j] = dist[i][k] + dist[k][j];
+
+            }
+
+          }
+
+        }
+
+      }
+
+      return dist;
+
+    };
+
+  }());
