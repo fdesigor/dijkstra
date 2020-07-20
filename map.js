@@ -1,6 +1,7 @@
 // Initialize and add the map
 var map;
 function initMap() {
+  // fetch("./farmacias.json")
   fetch("./dataset.json")
     .then((response) => response.json())
     .then((json) => {
@@ -17,7 +18,7 @@ function initMap() {
       map = new google.maps.Map(document.getElementById("map"), options);
 
       // Vertices
-      let nodes = json.map(city => new google.maps.Marker({ position: city.coord, map: map }));
+      let nodes = json.map(city => new google.maps.Marker({ position: city.coord, icon: 'img/marker.png', map: map }));
 
       // Matriz de distancia
       let matrix = []
@@ -51,11 +52,13 @@ function initMap() {
         }  
       }
 
-	  var graph = new Dijkstra(mapDijkistra);
+      // console.table(matrix)
+      // var shortestPath = new floydWarshall(matrix);
+      // console.table(shortestPath)
 
-    //   console.log(graph.findShortestPath(1, 40));
-
+      var graph = new Dijkstra(mapDijkistra);
       let shortestPath = graph.findShortestPath(1, 40);
+      console.log(shortestPath)
 
       let optionsPoly = {
         strokeColor: '#C83939',
@@ -66,7 +69,7 @@ function initMap() {
             path: google.maps.SymbolPath.CIRCLE,
             fillColor: '#C83939',
             fillOpacity: 1,
-            scale: 2,
+            scale: 3,
             strokeColor: '#C83939',
             strokeOpacity: 1,
           },
@@ -83,39 +86,40 @@ function initMap() {
             }
           }
         }
-	  }
+	    }
 	
 	
-	// FLOYD WHARSHAL
-	// matrix2 = [
-	// 	[Infinity, 325, 430, 295, 960, 710, 1340, 280],
-	// 	[325, Infinity, 490, 535, 322, 1022, 1350, 330],
-	// 	[560, 420, Infinity, 554, 605, 590, 891, 215],
-	// 	[270, 535, 570, Infinity, 947, 754, 1288, 250],
-	// 	[940, 325, 652, 1023, Infinity, 584, 396, 1210],
-	// 	[850, 1080, 573, 827, 584, Infinity, 680, 840],
-	// 	[1560, 1350, 960, 1076, 496, 680, Infinity, 1320],
-	// 	[280, 380, 342, 331, 1387, 840, 1209, Infinity]
-	// ]
-	// var shortestDists = floydWarshall(matrix2);
-	// console.log(shortestDists)
+      // FLOYD WHARSHAL
+      matrix2 = [
+      	[Infinity, 325, 430, 295, 960, 710, 1340, 280],
+      	[325, Infinity, 490, 535, 322, 1022, 1350, 330],
+      	[560, 420, Infinity, 554, 605, 590, 891, 215],
+      	[270, 535, 570, Infinity, 947, 754, 1288, 250],
+      	[940, 325, 652, 1023, Infinity, 584, 396, 1210],
+      	[850, 1080, 573, 827, 584, Infinity, 680, 840],
+      	[1560, 1350, 960, 1076, 496, 680, Infinity, 1320],
+      	[280, 380, 342, 331, 1387, 840, 1209, Infinity]
+      ]
+      console.table(matrix2)
+      var shortestDists = floydWarshall(matrix2);
+      console.table(shortestDists)
       
-      // ANIMATED MARKER
+      // // ANIMATED MARKER
       // let mk = new google.maps.Marker({ position: { "lat": 41.85003000, "lng": -87.65005000 }, map: map })
       // mk.setPosition(new google.maps.LatLng(-5.7930018, -37.5629128))
 
-      // Salvar como CSV
-      var csv = '';
-      matrix.forEach(function(row) {
-              csv += row.join(';');
-              csv += "\n";
-      });
+      // // Salvar como CSV
+      // var csv = '';
+      // matrix.forEach(function(row) {
+      //         csv += row.join(';');
+      //         csv += "\n";
+      // });
 
-      var hiddenElement = document.createElement('a');
-      hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
-      hiddenElement.target = '_blank';
-      hiddenElement.download = 'distance.csv';
-      hiddenElement.click();
+      // var hiddenElement = document.createElement('a');
+      // hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+      // hiddenElement.target = '_blank';
+      // hiddenElement.download = 'distance.csv';
+      // hiddenElement.click();
 
     });
 }
